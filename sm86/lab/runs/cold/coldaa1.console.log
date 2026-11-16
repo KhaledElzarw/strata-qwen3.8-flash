@@ -1,0 +1,45 @@
+loading the model (the first start takes a minute or two) ...
+[strata] drafting: DFlash2 alone (--draft dflash2, --draft-conf 0.65)
+[strata] starting the engine: reading the model's weights ...
+[strata] still starting (20 s) - please wait ...
+[strata] loading the experts into RAM (about 47 GB) and locking part of them for the GPU.
+         YOUR PC CAN BE SLOW OR STOP RESPONDING FOR 1-3 MINUTES NOW - this is normal.
+         Please wait and don't close this window; the server says when it is ready.
+[strata] still starting (55 s) - please wait ...
+[strata] experts loaded: 39.97 GiB at 5.05 GiB/s (55 s so far)
+[strata] filling the GPU's expert cache (9504 experts, 15.40 GiB of VRAM) ...
+[strata] almost ready ...
+ready: http://127.0.0.1:19100/v1  (OpenAI: /v1/chat/completions, Anthropic: /v1/messages, context 262144 tokens)
+       open http://127.0.0.1:19100/ in a browser to chat; close this window to stop the model
+[strata] reading the prompt: 3,986 of 3,993 tokens, 2 s so far
+[strata] done: 8 tokens in 2 s (63.2 tok/s) (length, cancel=False), expert cache 91.9% hit (+0.1% of the routed experts over PCIe)
+[strata] reading the prompt: 16,838 of 16,845 tokens, 5 s so far
+[strata] done: 8 tokens in 6 s (99.3 tok/s) (length, cancel=False), expert cache 94.5% hit
+[strata] reading the prompt: 32,768 of 33,831 tokens, 10 s so far
+[strata] reading the prompt: 33,824 of 33,831 tokens, 11 s so far
+[strata] done: 8 tokens in 12 s (102.3 tok/s) (length, cancel=False), expert cache 96.4% hit
+[strata] reading the prompt: 32,768 of 65,582 tokens, 10 s so far
+[strata] reading the prompt: 65,536 of 65,582 tokens, 20 s so far
+[strata] answering: 7 of max 8 tokens, 28.0 tok/s, 21 s
+[strata] done: 8 tokens in 21 s (94.0 tok/s) (length, cancel=False), expert cache 97.0% hit
+[strata] reading the prompt: 32,768 of 65,420 tokens, 10 s so far
+[strata] reading the prompt: 65,413 of 65,420 tokens, 20 s so far
+[strata] done: 8 tokens in 21 s (121.6 tok/s) (length, cancel=False), expert cache 99.2% hit
+[strata] reading the prompt: 32,768 of 33,562 tokens, 10 s so far
+[strata] reading the prompt: 33,561 of 33,562 tokens, 12 s so far
+[strata] done: 8 tokens in 12 s (144.9 tok/s) (length, cancel=False), expert cache 98.8% hit
+[strata] reading the prompt: 16,919 of 16,926 tokens, 6 s so far
+[strata] done: 8 tokens in 6 s (101.8 tok/s) (length, cancel=False), expert cache 98.3% hit
+[strata] reading the prompt: 4,125 of 4,132 tokens, 2 s so far
+[strata] done: 8 tokens in 2 s (153.6 tok/s) (length, cancel=False), expert cache 99.0% hit
+[strata] reading the prompt: 4,442 of 4,449 tokens, 2 s so far
+[strata] done: 8 tokens in 2 s (88.8 tok/s) (length, cancel=False), expert cache 96.1% hit (+0.1% of the routed experts over PCIe)
+[strata] reading the prompt: 17,330 of 17,337 tokens, 6 s so far
+[strata] done: 8 tokens in 6 s (124.4 tok/s) (length, cancel=False), expert cache 98.7% hit
+[strata] reading the prompt: 32,768 of 33,550 tokens, 10 s so far
+[strata] reading the prompt: 33,549 of 33,550 tokens, 11 s so far
+[strata] done: 8 tokens in 12 s (75.8 tok/s) (length, cancel=False), expert cache 97.9% hit (+0.1% of the routed experts over PCIe)
+[strata] reading the prompt: 32,768 of 65,738 tokens, 10 s so far
+[strata] reading the prompt: 65,536 of 65,738 tokens, 20 s so far
+[strata] reading the prompt: 65,737 of 65,738 tokens, 21 s so far
+[strata] done: 8 tokens in 22 s (99.9 tok/s) (length, cancel=False), expert cache 99.4% hit

@@ -1,0 +1,14 @@
+01-tail2-smoke-gen-on-smoke	64
+02-tail2-smoke-score-on-smoke	71
+01-tail2-gen-on-onA	220
+02-tail2-gen-on-onB	226
+03-tail2-gen-offT-offTA	240
+04-tail2-gen-offT-offTB	233
+05-tail2-score-offT-offTA	394
+06-tail2-score-offT-offTB	396
+07-tail2-score-offT-onA	390
+08-tail2-score-offT-onB	401
+09-tail2-score-on-onA	378
+10-tail2-score-on-onB	388
+11-tail2-score-on-offTA	394
+12-tail2-score-on-offTB	450

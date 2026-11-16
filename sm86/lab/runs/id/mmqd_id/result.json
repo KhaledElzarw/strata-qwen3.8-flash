@@ -1,0 +1,41 @@
+{
+ "name": "mmqd_id",
+ "cfg": "D:/Projects/local_ai/strata-lab/runs/id/cfg-run.json",
+ "ref": "exe=C:\\src\\Strata\\build-sm86\\strata.exe;STRATA_GR_DOWN86=1;STRATA_GR_UP_WIDE=1;STRATA_GR_UP_HYB=3;STRATA_GR_XN=1;STRATA_FETCH_FORK=1;STRATA_GRAPH_PRIO=1;STRATA_MMVQ_IL_3090=1;STRATA_EXP_MODE=9;STRATA_DECODE_TIMING=1;STRATA_EXP9_DOWN=42:10;STRATA_DOORBELL_STORE=1;STRATA_FUSE_HITS=1;STRATA_ACTQ_SKIP=1;STRATA_GR_UP_PL=1;STRATA_GR_D87=8",
+ "items": 10,
+ "forced_tokens": 1363,
+ "pcie_frac": "0.2",
+ "cands": [
+  {
+   "lines": [
+    1363,
+    1363
+   ],
+   "differing_lines": 621,
+   "identical": false,
+   "first_difference": {
+    "line": 0,
+    "item": "agent-150",
+    "ref": "149\t8442\t-0.124802172\t8442\t-0.124802172\t1\t-6.979127467\t-0.123870623\t8442:-0.124802\t590:-3.841721",
+    "cand": "149\t8442\t-0.147162980\t8442\t-0.147162980\t1\t-6.683240480\t-0.145910481\t8442:-0.147163\t590:-3.799137"
+   },
+   "argmax_flips": 13,
+   "max_abs_logprob_diff": 0.514348432,
+   "first_item_with_difference": "agent-150",
+   "spec": "exe=C:\\src\\Strata\\build-sm86\\strata.exe;STRATA_GR_DOWN86=1;STRATA_GR_UP_WIDE=1;STRATA_GR_UP_HYB=3;STRATA_GR_XN=1;STRATA_FETCH_FORK=1;STRATA_GRAPH_PRIO=1;STRATA_MMVQ_IL_3090=1;STRATA_EXP_MODE=9;STRATA_DECODE_TIMING=1;STRATA_EXP9_DOWN=42:10;STRATA_DOORBELL_STORE=1;STRATA_FUSE_HITS=1;STRATA_ACTQ_SKIP=1;STRATA_GR_UP_PL=1;STRATA_GR_D87=8;exe=C:\\src\\Strata\\build-sm86-tab\\strata.exe;STRATA_MMQ_DIRECT=1",
+   "decode_tps_ref": 107.1,
+   "decode_tps_cand": 107.1
+  },
+  {
+   "lines": [
+    1363,
+    1363
+   ],
+   "differing_lines": 0,
+   "identical": true,
+   "spec": "exe=C:\\src\\Strata\\build-sm86\\strata.exe;STRATA_GR_DOWN86=1;STRATA_GR_UP_WIDE=1;STRATA_GR_UP_HYB=3;STRATA_GR_XN=1;STRATA_FETCH_FORK=1;STRATA_GRAPH_PRIO=1;STRATA_MMVQ_IL_3090=1;STRATA_EXP_MODE=9;STRATA_DECODE_TIMING=1;STRATA_EXP9_DOWN=42:10;STRATA_DOORBELL_STORE=1;STRATA_FUSE_HITS=1;STRATA_ACTQ_SKIP=1;STRATA_GR_UP_PL=1;STRATA_GR_D87=8;exe=C:\\src\\Strata\\build-sm86-tab\\strata.exe",
+   "decode_tps_ref": 107.1,
+   "decode_tps_cand": 106.9
+  }
+ ]
+}

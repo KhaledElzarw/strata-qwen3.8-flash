@@ -143,10 +143,11 @@ use its `strata.exe`, or build this checkout (Visual Studio 2022 Build Tools and
 sm86\lab\build-engine.bat
 ```
 
-**2. Use the config.** [`sm86/configs/strata-iq3_xxs-q3.json`](sm86/configs/strata-iq3_xxs-q3.json) is the exact
-configuration behind the numbers above: the switches in its `env` block, DFlash2 at confidence 0.65 with the tuned
-pack, a 2 GiB conversation cache re-parked after 8,192 new tokens, and the 262,144-token context. It keeps two
-upstream defaults that are not bit-exact (see the [disclaimer](#disclaimer)). Edit its paths
+**2. Use the config.** [`sm86/configs/strata-iq3_xxs-q4.json`](sm86/configs/strata-iq3_xxs-q4.json) is the current
+configuration: the q3 config behind the numbers above ([`strata-iq3_xxs-q3.json`](sm86/configs/strata-iq3_xxs-q3.json))
+plus 8-row DFlash2 windows and the drafter's GEMM variant 41 (+1.4% decode, below), with the switches in its `env`
+block, DFlash2 at confidence 0.65 with the tuned pack, a 2 GiB conversation cache re-parked after 8,192 new tokens, and the 262,144-token context. It keeps two
+upstream defaults that are not bit-exact and adds one setting that is not (see the [disclaimer](#disclaimer)). Edit its paths
 (`exe`, `--pack`, `--native`, `--ple-gguf`, `--expert-profile`, `--mtp`, `cwd`, `tokenizer`, `log`, `lib_dirs`,
 `draft_pack`) to match your install, then save it as `strata-iq3_xxs-tuned2.json` in the checkout, or pass it with
 `-Config`.
@@ -182,10 +183,11 @@ All are environment variables (or entries in a config's `env` block). **Fork** m
 | `STRATA_FUSE_HITS=1` | Fork | folds the VRAM hits into the combine kernel |
 | `STRATA_ACTQ_SKIP=1` | Fork | skips the CPU activation for tokens with no CPU expert |
 | `STRATA_CKPT_ASYNC=1`, `_GATHER=1`, `_POOL=1`, `_POOL_READY=2` | | asynchronous, gathered, pooled conversation checkpoints |
+| `STRATA_DF2_GEMM4=41` | Fork | the DFlash2 drafter's q4 GEMMs take variant 41 for every matrix (bitwise equal) |
 | `STRATA_DRAFT_PACK=<file>` or `"draft_pack"` | Fork | starts DFlash2 with exactly that pack; without it this card silently falls back to the MTP drafter |
 
 Arguments in the config: `--expert-cache` (sized by the launcher), `--conversation-cache-mib 2048`,
-`--conversation-cache-park-gain 8192` and `--draft-conf 0.65`. The reasoning behind each kernel is in
+`--conversation-cache-park-gain 8192`, `--draft-conf 0.65` and `--spec 8` (DFlash2 windows of up to 8 rows instead of 6). The reasoning behind each kernel is in
 [`docs/decisions`](docs/decisions/) (0001 to 0006).
 
 ## Quality: bit-identical
@@ -210,7 +212,14 @@ Arguments in the config: `--expert-cache` (sized by the launcher), `--conversati
 >   Upstream measured a KL of 0.003–0.006 against running without it, with the same top token 97.5–98.2% of the
 >   time. `STRATA_ROUTE_TAIL_SKIP=0` turns it off.
 >
-> Neither was measured on against off on this card. Upstream's notes: [`docs/DETAILS.md`](docs/DETAILS.md) and
+> - **8-row DFlash2 windows (`--spec 8`, this fork's q4 config).** Longer verify windows change which rows the target
+>   model computes together, so the text is not bit-identical. A crossed force-check on this card (2026-11-16, 28
+>   runs) put its text effect at +0.05 points [90% CI -0.24, +0.33], inside the 0.5-point bar; prompt time unchanged.
+>   Drop `--spec 8` from `user_args` to go back to 6-row windows.
+>
+> The two upstream defaults were measured on against off on this card on 2026-11-16 (crossed force-checks: tail skip
+> +0.14 points [-0.02, 0.31] over 122 requests, CPU share +0.01 [-0.31, 0.33]; both inside the bar), after the
+> results above. Upstream's notes: [`docs/DETAILS.md`](docs/DETAILS.md) and
 > [`include/strata/prefill/share_rules.hpp`](include/strata/prefill/share_rules.hpp).
 
 ## Reproduce it

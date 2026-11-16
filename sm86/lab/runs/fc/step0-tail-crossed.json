@@ -1,0 +1,20 @@
+{
+ "requests": 65,
+ "rates_pct": {
+  "S0 scorer / reference text": 3.457,
+  "S0 scorer / default text": 4.675,
+  "S1 scorer / reference text": 4.42,
+  "S1 scorer / default text": 3.783
+ },
+ "text_effect_pts": 0.291,
+ "text_effect_ci90": [
+  0.04,
+  0.545
+ ],
+ "own_path_effect_pts": 0.927,
+ "own_path_effect_ci90": [
+  0.73,
+  1.143
+ ],
+ "rate_rule_text_effect": "INCONCLUSIVE"
+}

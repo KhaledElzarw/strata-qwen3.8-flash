@@ -1,0 +1,17 @@
+{
+ "requests": 57,
+ "stock_rates_pct": [
+  2.153,
+  2.024
+ ],
+ "cand_rates_pct": [
+  2.412,
+  2.564
+ ],
+ "diff_pts": 0.4,
+ "diff_ci90_pts": [
+  0.177,
+  0.62
+ ],
+ "rate_rule": "INCONCLUSIVE"
+}

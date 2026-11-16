@@ -1,0 +1,17 @@
+{
+ "requests": 65,
+ "stock_rates_pct": [
+  4.262,
+  4.577
+ ],
+ "cand_rates_pct": [
+  3.515,
+  4.051
+ ],
+ "diff_pts": -0.636,
+ "diff_ci90_pts": [
+  -0.916,
+  -0.382
+ ],
+ "rate_rule": "PASS"
+}
