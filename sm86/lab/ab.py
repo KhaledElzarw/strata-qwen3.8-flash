@@ -30,7 +30,7 @@ STRATA = Path(os.environ.get("STRATA_DIR") or LAB.parents[1])   # the Strata che
 BASE_CFG = STRATA / "strata-iq3_xxs.json"
 PY = STRATA / ".venv" / "Scripts" / "python.exe"
 PORT = 19100
-KILL = ("Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like '*serve*server.py*' -or $_.Name -eq 'strata.exe' }"
+KILL = ("Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like '*Strata*\\serve\\server.py*' -or $_.Name -eq 'strata.exe' }"
         " | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }")
 
 sys.path.insert(0, str(LAB))

@@ -54,6 +54,10 @@
 namespace strata::prefill::mmq {
 
 // A second net behind the configure fingerprint: the upstream templates this copy calls keep their signatures.
+// Skipped from CUDA 13 on: with CUDA 13.0 and a VS 2022 host both asserts fail although the compiler prints the two
+// types identically (likely the __device__ execution space carried in the function type); the configure-time
+// SHA-256 fingerprint of the mirrored region (CMakeLists.txt, _strata_mmq_tab_known) still guards a re-sync.
+#if !defined(__CUDACC_VER_MAJOR__) || __CUDACC_VER_MAJOR__ < 13
 static_assert(std::is_same<decltype(&mul_mat_q_process_tile<GGML_TYPE_Q8_0, 8, false, false>),
                            void (*)(const char*, int, const int*, const int*, float*, float*, const float*, int, int, int,
                                     int, int, int, int)>::value,
@@ -62,6 +66,7 @@ static_assert(std::is_same<decltype(&mul_mat_q_stream_k_fixup<GGML_TYPE_Q8_0, 8,
                            void (*)(const int32_t*, const int32_t*, float*, float*, uint3, int, int, int, uint3, int,
                                     uint3, int, uint3)>::value,
               "mmq.cuh: mul_mat_q_stream_k_fixup changed - re-sync src/prefill/moe_mmq_tab.cuh");
+#endif
 
 // The table reaches the kernel as 16 separate `const char * __restrict__` parameters, like upstream's `x`, and an
 // expert's entry is picked with a select chain: a pointer picked from read-only kernel parameters keeps upstream's
