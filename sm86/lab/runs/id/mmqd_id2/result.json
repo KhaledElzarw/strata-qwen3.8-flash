@@ -1,0 +1,50 @@
+{
+ "name": "mmqd_id2",
+ "cfg": "D:/Projects/local_ai/strata-lab/runs/id/cfg-run.json",
+ "ref": "exe=C:\\src\\Strata\\build-sm86\\strata.exe;STRATA_GR_DOWN86=1;STRATA_GR_UP_WIDE=1;STRATA_GR_UP_HYB=3;STRATA_GR_XN=1;STRATA_FETCH_FORK=1;STRATA_GRAPH_PRIO=1;STRATA_MMVQ_IL_3090=1;STRATA_EXP_MODE=9;STRATA_DECODE_TIMING=1;STRATA_EXP9_DOWN=42:10;STRATA_DOORBELL_STORE=1;STRATA_FUSE_HITS=1;STRATA_ACTQ_SKIP=1;STRATA_GR_UP_PL=1;STRATA_GR_D87=8",
+ "items": 10,
+ "forced_tokens": 1363,
+ "pcie_frac": "0.2",
+ "cands": [
+  {
+   "lines": [
+    1363,
+    1363
+   ],
+   "differing_lines": 763,
+   "identical": false,
+   "first_difference": {
+    "line": 5,
+    "item": "agent-510",
+    "ref": "512\t1132\t-0.805759503\t1132\t-0.805759503\t1\t-16.193212582\t-0.805759410\t1132:-0.805760\t424:-0.884651",
+    "cand": "512\t1132\t-0.789789989\t1132\t-0.789789989\t1\t-16.278378322\t-0.789789904\t1132:-0.789790\t424:-0.902221"
+   },
+   "argmax_flips": 27,
+   "max_abs_logprob_diff": 1.3724982810000004,
+   "first_item_with_difference": "agent-510",
+   "spec": "exe=C:\\src\\Strata\\build-sm86\\strata.exe;STRATA_GR_DOWN86=1;STRATA_GR_UP_WIDE=1;STRATA_GR_UP_HYB=3;STRATA_GR_XN=1;STRATA_FETCH_FORK=1;STRATA_GRAPH_PRIO=1;STRATA_MMVQ_IL_3090=1;STRATA_EXP_MODE=9;STRATA_DECODE_TIMING=1;STRATA_EXP9_DOWN=42:10;STRATA_DOORBELL_STORE=1;STRATA_FUSE_HITS=1;STRATA_ACTQ_SKIP=1;STRATA_GR_UP_PL=1;STRATA_GR_D87=8;exe=C:\\src\\Strata\\build-sm86-tab\\strata.exe;STRATA_MMQ_DIRECT=1;args=--expert-cache 7102",
+   "decode_tps_ref": 105.8,
+   "decode_tps_cand": 105.0
+  },
+  {
+   "lines": [
+    1363,
+    1363
+   ],
+   "differing_lines": 890,
+   "identical": false,
+   "first_difference": {
+    "line": 5,
+    "item": "agent-510",
+    "ref": "512\t1132\t-0.805759503\t1132\t-0.805759503\t1\t-16.193212582\t-0.805759410\t1132:-0.805760\t424:-0.884651",
+    "cand": "512\t1132\t-0.789789989\t1132\t-0.789789989\t1\t-16.278378322\t-0.789789904\t1132:-0.789790\t424:-0.902221"
+   },
+   "argmax_flips": 30,
+   "max_abs_logprob_diff": 1.3724982810000004,
+   "first_item_with_difference": "agent-510",
+   "spec": "exe=C:\\src\\Strata\\build-sm86\\strata.exe;STRATA_GR_DOWN86=1;STRATA_GR_UP_WIDE=1;STRATA_GR_UP_HYB=3;STRATA_GR_XN=1;STRATA_FETCH_FORK=1;STRATA_GRAPH_PRIO=1;STRATA_MMVQ_IL_3090=1;STRATA_EXP_MODE=9;STRATA_DECODE_TIMING=1;STRATA_EXP9_DOWN=42:10;STRATA_DOORBELL_STORE=1;STRATA_FUSE_HITS=1;STRATA_ACTQ_SKIP=1;STRATA_GR_UP_PL=1;STRATA_GR_D87=8;exe=C:\\src\\Strata\\build-sm86-tab\\strata.exe;STRATA_MMQ_DIRECT=1;args=--expert-cache 7103",
+   "decode_tps_ref": 105.8,
+   "decode_tps_cand": 106.0
+  }
+ ]
+}

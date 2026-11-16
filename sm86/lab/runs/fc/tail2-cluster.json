@@ -1,0 +1,101 @@
+{
+ "pooled": {
+  "label": "pooled",
+  "requests": 122,
+  "clusters": {
+   "step0": [
+    "doc:agent",
+    "doc:code",
+    "doc:docs",
+    "doc:english",
+    "doc:multilingual"
+   ],
+   "tail2": [
+    "task:bank",
+    "task:csv_line",
+    "task:intervals",
+    "task:jsondiff",
+    "task:lru_ttl",
+    "task:wordfreq"
+   ]
+  },
+  "text_effect_pts": 0.143,
+  "request_bootstrap": {
+   "ci90": [
+    -0.022,
+    0.313
+   ],
+   "width": 0.335,
+   "rule": "PASS"
+  },
+  "cluster_bootstrap": {
+   "ci90": [
+    -0.023,
+    0.33
+   ],
+   "width": 0.352,
+   "rule": "PASS"
+  }
+ },
+ "step0": {
+  "label": "step0 alone",
+  "requests": 65,
+  "clusters": {
+   "step0": [
+    "doc:agent",
+    "doc:code",
+    "doc:docs",
+    "doc:english",
+    "doc:multilingual"
+   ]
+  },
+  "text_effect_pts": 0.291,
+  "request_bootstrap": {
+   "ci90": [
+    0.04,
+    0.545
+   ],
+   "width": 0.505,
+   "rule": "INCONCLUSIVE"
+  },
+  "cluster_bootstrap": {
+   "ci90": [
+    0.011,
+    0.568
+   ],
+   "width": 0.557,
+   "rule": "INCONCLUSIVE"
+  }
+ },
+ "tail2": {
+  "label": "tail2 alone",
+  "requests": 57,
+  "clusters": {
+   "tail2": [
+    "task:bank",
+    "task:csv_line",
+    "task:intervals",
+    "task:jsondiff",
+    "task:lru_ttl",
+    "task:wordfreq"
+   ]
+  },
+  "text_effect_pts": -0.021,
+  "request_bootstrap": {
+   "ci90": [
+    -0.218,
+    0.17
+   ],
+   "width": 0.387,
+   "rule": "PASS"
+  },
+  "cluster_bootstrap": {
+   "ci90": [
+    -0.167,
+    0.153
+   ],
+   "width": 0.321,
+   "rule": "PASS"
+  }
+ }
+}

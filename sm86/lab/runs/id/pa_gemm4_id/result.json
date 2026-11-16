@@ -1,0 +1,32 @@
+{
+ "name": "pa_gemm4_id",
+ "cfg": "D:/Projects/local_ai/strata-lab/runs/id/cfg-run.json",
+ "ref": "exe=C:\\src\\Strata\\build-sm86\\strata.exe;STRATA_GR_DOWN86=1;STRATA_GR_UP_WIDE=1;STRATA_GR_UP_HYB=3;STRATA_GR_XN=1;STRATA_FETCH_FORK=1;STRATA_GRAPH_PRIO=1;STRATA_MMVQ_IL_3090=1;STRATA_EXP_MODE=9;STRATA_DECODE_TIMING=1;STRATA_EXP9_DOWN=42:10;STRATA_DOORBELL_STORE=1;STRATA_FUSE_HITS=1;STRATA_ACTQ_SKIP=1;STRATA_GR_UP_PL=1;STRATA_GR_D87=8",
+ "items": 10,
+ "forced_tokens": 1363,
+ "pcie_frac": "0.2",
+ "cands": [
+  {
+   "lines": [
+    1363,
+    1363
+   ],
+   "differing_lines": 0,
+   "identical": true,
+   "spec": "exe=C:\\src\\Strata\\build-sm86\\strata.exe;STRATA_GR_DOWN86=1;STRATA_GR_UP_WIDE=1;STRATA_GR_UP_HYB=3;STRATA_GR_XN=1;STRATA_FETCH_FORK=1;STRATA_GRAPH_PRIO=1;STRATA_MMVQ_IL_3090=1;STRATA_EXP_MODE=9;STRATA_DECODE_TIMING=1;STRATA_EXP9_DOWN=42:10;STRATA_DOORBELL_STORE=1;STRATA_FUSE_HITS=1;STRATA_ACTQ_SKIP=1;STRATA_GR_UP_PL=1;STRATA_GR_D87=8;STRATA_DF2_GEMM4=24",
+   "decode_tps_ref": 106.1,
+   "decode_tps_cand": 103.3
+  },
+  {
+   "lines": [
+    1363,
+    1363
+   ],
+   "differing_lines": 0,
+   "identical": true,
+   "spec": "exe=C:\\src\\Strata\\build-sm86\\strata.exe;STRATA_GR_DOWN86=1;STRATA_GR_UP_WIDE=1;STRATA_GR_UP_HYB=3;STRATA_GR_XN=1;STRATA_FETCH_FORK=1;STRATA_GRAPH_PRIO=1;STRATA_MMVQ_IL_3090=1;STRATA_EXP_MODE=9;STRATA_DECODE_TIMING=1;STRATA_EXP9_DOWN=42:10;STRATA_DOORBELL_STORE=1;STRATA_FUSE_HITS=1;STRATA_ACTQ_SKIP=1;STRATA_GR_UP_PL=1;STRATA_GR_D87=8;STRATA_DF2_GEMM4=41",
+   "decode_tps_ref": 106.1,
+   "decode_tps_cand": 104.7
+  }
+ ]
+}

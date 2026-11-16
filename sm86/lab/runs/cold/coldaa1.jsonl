@@ -1,0 +1,12 @@
+{"label": "coldaa1", "rep": 0, "size": 4096, "prompt_n": 3993, "cache_n": 0, "prompt_ms": 1756.7, "prompt_tps": 2273.0, "wall_s": 1.91}
+{"label": "coldaa1", "rep": 0, "size": 16384, "prompt_n": 16845, "cache_n": 0, "prompt_ms": 5621.0, "prompt_tps": 2996.8, "wall_s": 5.72}
+{"label": "coldaa1", "rep": 0, "size": 32768, "prompt_n": 33831, "cache_n": 0, "prompt_ms": 11480.5, "prompt_tps": 2946.8, "wall_s": 11.58}
+{"label": "coldaa1", "rep": 0, "size": 65536, "prompt_n": 65582, "cache_n": 0, "prompt_ms": 20799.9, "prompt_tps": 3153.0, "wall_s": 20.95}
+{"label": "coldaa1", "rep": 1, "size": 65536, "prompt_n": 65420, "cache_n": 0, "prompt_ms": 20798.5, "prompt_tps": 3145.4, "wall_s": 20.93}
+{"label": "coldaa1", "rep": 1, "size": 32768, "prompt_n": 33562, "cache_n": 0, "prompt_ms": 11699.7, "prompt_tps": 2868.6, "wall_s": 11.8}
+{"label": "coldaa1", "rep": 1, "size": 16384, "prompt_n": 16926, "cache_n": 0, "prompt_ms": 5892.5, "prompt_tps": 2872.5, "wall_s": 6.0}
+{"label": "coldaa1", "rep": 1, "size": 4096, "prompt_n": 4132, "cache_n": 0, "prompt_ms": 2119.6, "prompt_tps": 1949.4, "wall_s": 2.2}
+{"label": "coldaa1", "rep": 2, "size": 4096, "prompt_n": 4449, "cache_n": 0, "prompt_ms": 2028.5, "prompt_tps": 2193.2, "wall_s": 2.15}
+{"label": "coldaa1", "rep": 2, "size": 16384, "prompt_n": 17337, "cache_n": 0, "prompt_ms": 5844.9, "prompt_tps": 2966.2, "wall_s": 5.94}
+{"label": "coldaa1", "rep": 2, "size": 32768, "prompt_n": 33550, "cache_n": 0, "prompt_ms": 11469.0, "prompt_tps": 2925.3, "wall_s": 11.61}
+{"label": "coldaa1", "rep": 2, "size": 65536, "prompt_n": 65738, "cache_n": 0, "prompt_ms": 21447.0, "prompt_tps": 3065.1, "wall_s": 21.6}

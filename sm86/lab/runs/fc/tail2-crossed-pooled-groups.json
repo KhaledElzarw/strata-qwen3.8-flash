@@ -1,0 +1,80 @@
+{
+ "group1": {
+  "requests": 65,
+  "tokens_per_arm": {
+   "ref": [
+    20766,
+    21191
+   ],
+   "cand": [
+    21221,
+    21969
+   ],
+   "ref-x": [
+    20766,
+    21191
+   ],
+   "cand-x": [
+    21221,
+    21969
+   ]
+  },
+  "rates_pct": {
+   "S0 scorer / reference text": 3.457,
+   "S0 scorer / default text": 4.675,
+   "S1 scorer / reference text": 4.42,
+   "S1 scorer / default text": 3.783
+  },
+  "text_effect_pts": 0.291,
+  "text_effect_ci90": [
+   0.04,
+   0.545
+  ],
+  "ci90_width": 0.505,
+  "own_path_effect_pts": 0.927,
+  "own_path_effect_ci90": [
+   0.73,
+   1.143
+  ],
+  "rate_rule_text_effect": "INCONCLUSIVE"
+ },
+ "group2": {
+  "requests": 57,
+  "tokens_per_arm": {
+   "ref": [
+    20391,
+    20404
+   ],
+   "cand": [
+    19940,
+    21451
+   ],
+   "ref-x": [
+    20391,
+    20404
+   ],
+   "cand-x": [
+    19940,
+    21451
+   ]
+  },
+  "rates_pct": {
+   "S0 scorer / reference text": 2.089,
+   "S0 scorer / default text": 2.488,
+   "S1 scorer / reference text": 2.601,
+   "S1 scorer / default text": 2.16
+  },
+  "text_effect_pts": -0.021,
+  "text_effect_ci90": [
+   -0.218,
+   0.17
+  ],
+  "ci90_width": 0.387,
+  "own_path_effect_pts": 0.42,
+  "own_path_effect_ci90": [
+   0.333,
+   0.508
+  ],
+  "rate_rule_text_effect": "PASS"
+ }
+}

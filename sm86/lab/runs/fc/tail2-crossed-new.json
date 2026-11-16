@@ -1,0 +1,40 @@
+{
+ "requests": 57,
+ "tokens_per_arm": {
+  "ref": [
+   20391,
+   20404
+  ],
+  "cand": [
+   19940,
+   21451
+  ],
+  "ref-x": [
+   20391,
+   20404
+  ],
+  "cand-x": [
+   19940,
+   21451
+  ]
+ },
+ "rates_pct": {
+  "S0 scorer / reference text": 2.089,
+  "S0 scorer / default text": 2.488,
+  "S1 scorer / reference text": 2.601,
+  "S1 scorer / default text": 2.16
+ },
+ "text_effect_pts": -0.021,
+ "text_effect_ci90": [
+  -0.218,
+  0.17
+ ],
+ "ci90_width": 0.387,
+ "own_path_effect_pts": 0.42,
+ "own_path_effect_ci90": [
+  0.333,
+  0.508
+ ],
+ "rate_rule_text_effect": "PASS",
+ "groups": 1
+}
