@@ -45,8 +45,9 @@ def answer_text(r: dict) -> str:
 def gpu_others(engine: str = "strata.exe", samples: int = 2) -> list:
     """Other programs' SM use in `samples` one-second nvidia-smi pmon samples: [(name, sm%)]; [] when pmon fails."""
     try:
+        # (pmon can print stray non-ASCII bytes after a cut-off name: decode leniently, or the reader thread dies)
         out = subprocess.run(["nvidia-smi", "pmon", "-c", str(samples), "-s", "u"], capture_output=True, text=True,
-                             timeout=60).stdout
+                             encoding="utf-8", errors="replace", timeout=60).stdout or ""
     except (OSError, subprocess.SubprocessError):
         return []
     busy = []
