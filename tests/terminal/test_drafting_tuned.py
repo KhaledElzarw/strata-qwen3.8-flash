@@ -925,5 +925,29 @@ class DraftPackKey(Base):
         self.assertEqual(flag(self.apply(self.cfg(Q4, draft_pack=str(self.a)))[1], "--draft-model"), str(self.b))
 
 
+class DraftPackKeyAlone(Base):
+    """sm86-decode: a config's "draft_pack" is a drafter on its own: with no stock or tuned pack in the data folder and no STRATA_DRAFT_PACK, DFlash2 still
+    starts with that pack (it fell back to the MTP, "the DFlash2 drafter isn't downloaded yet", when only the environment counted as a drafter)."""
+
+    def setUp(self):
+        super().setUp()
+        self.a = self.root / "a.pack"
+        self.a.write_bytes(b"a")
+        env = mock.patch.dict(os.environ)
+        env.start()
+        self.addCleanup(env.stop)
+        os.environ.pop("STRATA_DRAFT_PACK", None)
+
+    def test_the_config_pack_alone_starts_dflash2(self):
+        d, args = self.apply(self.cfg(Q4, drafting="dflash2", draft_pack=str(self.a)))
+        self.assertEqual(d.drafter, "dflash2")
+        self.assertEqual(flag(args, "--draft-model"), str(self.a))
+
+    def test_a_missing_config_pack_is_not_a_drafter(self):
+        d, args = self.apply(self.cfg(Q4, drafting="dflash2", draft_pack=str(self.root / "missing.pack")))
+        self.assertEqual(d.drafter, "mtp")
+        self.assertIsNone(flag(args, "--draft-model"))
+
+
 if __name__ == "__main__":
     unittest.main()

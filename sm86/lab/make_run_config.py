@@ -43,10 +43,14 @@ def main():
     conf = a.draft_conf
     if conf == "auto":
         conf = "0.65"
-    cfg["user_args"] = ["--draft-conf", conf]
+    mine = [str(x) for x in cfg.get("user_args") or []]   # the config's own (e.g. --spec 8): kept, only --draft-conf is set here
+    if "--draft-conf" in mine:
+        i = mine.index("--draft-conf")
+        del mine[i:i + 2]
+    cfg["user_args"] = ["--draft-conf", conf] + mine
     cfg["log"] = str(Path(a.out).with_suffix(".log"))
     Path(a.out).write_text(json.dumps(cfg, indent=1), encoding="utf-8")
-    print(f"expert cache {cache} (VRAM free {a.free_mib} MiB), draft-conf {conf} -> {a.out}")
+    print(f"expert cache {cache} (VRAM free {a.free_mib} MiB), user_args {' '.join(cfg['user_args'])} -> {a.out}")
 
 
 if __name__ == "__main__":

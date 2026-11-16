@@ -642,9 +642,11 @@ def card_vram_mib(cfg: dict[str, Any], backend: str | None, archs: Any = None) -
         return None
 
 
-def drafter_ready(data_dir: str | Path | None, model_name: str | None = None, backend: str | None = None) -> bool:
-    """Is a drafter file for this start on the computer: a stock pack (pack_ready), or, where the set has a tuned entry, the verified tuned pack."""
-    forced_pack = os.environ.get("STRATA_DRAFT_PACK")         # sm86-decode lab override (apply() starts DFlash2 with this file)
+def drafter_ready(data_dir: str | Path | None, model_name: str | None = None, backend: str | None = None,
+                  forced_pack: str | Path | None = None) -> bool:
+    """Is a drafter file for this start on the computer: a stock pack (pack_ready), or, where the set has a tuned entry, the verified tuned pack.
+    ``forced_pack``: the config's "draft_pack" (apply() passes it); STRATA_DRAFT_PACK wins over it, as in apply()."""
+    forced_pack = os.environ.get("STRATA_DRAFT_PACK") or forced_pack   # sm86-decode: the lab override, else the config's pack (apply() starts DFlash2 with it)
     if forced_pack and Path(forced_pack).is_file():
         return True
     try:
@@ -945,11 +947,11 @@ def choice_of(mode: Any, *, model_name: str | None = None, family: str | None = 
 
 def decide(mode: Any, *, klass: str = "other", model_name: str | None = None, family: str | None = None, data_dir: str | Path | None = None,
            backend: str | None = None, archs: Any = None, mtp_here: bool | None = None, blocked: bool = False, vocab_here: bool = True,
-           args: list[Any] | None = None, vram_mib: float | None = None) -> Decision:
+           args: list[Any] | None = None, vram_mib: float | None = None, forced_pack: str | Path | None = None) -> Decision:
     """The drafter a start uses. Never raises. One drafter, never two. A choice that cannot be applied becomes the other drafter when that one is on this computer,
     else none, with a note in plain words. ``mtp_here`` says whether the MTP layer is on disk (None: not known, taken as there), ``blocked`` that this start is a layer
     split or has several requests at once (see blocked_by), ``vocab_here`` that the draft vocabulary DFlash2 needs is there. ``klass`` is not used any more (Auto
-    does not depend on the kind of card) and stays only so the callers keep working."""
+    does not depend on the kind of card) and stays only so the callers keep working. ``forced_pack``: the config's "draft_pack", which counts as a drafter here."""
     asked = normalize(mode)
     if asked == "off":
         return Decision(asked, "off")
@@ -959,7 +961,7 @@ def decide(mode: Any, *, klass: str = "other", model_name: str | None = None, fa
         backend, model_name, archs, args=args, vram_mib=vram_mib) is not None))
 
     if want == "dflash2":
-        reason = NOT_HERE if (blocked or not vocab_here) else NOT_DOWNLOADED if not drafter_ready(data_dir, model_name, backend) else ""
+        reason = NOT_HERE if (blocked or not vocab_here) else NOT_DOWNLOADED if not drafter_ready(data_dir, model_name, backend, forced_pack) else ""
         if not reason:
             return Decision(asked, "dflash2", flags=engine_flags(pack_path(data_dir)))
         return Decision(asked, "mtp", reason) if have_mtp else Decision(asked, "off", NONE_HERE)
@@ -970,7 +972,7 @@ def decide(mode: Any, *, klass: str = "other", model_name: str | None = None, fa
             why = NOT_SUPPORTED if not supported_model(model_name, family) else NOT_SERVED if not ENGINE_SERVES_DFLASH2 else NOT_THIS_CARD
         return Decision(asked, "mtp", why)
     # the layer is not on this computer: DFlash2 instead when it can run and its pack is here (said), else none (said)
-    if runnable and not blocked and vocab_here and drafter_ready(data_dir, model_name, backend):
+    if runnable and not blocked and vocab_here and drafter_ready(data_dir, model_name, backend, forced_pack):
         return Decision(asked, "dflash2", NO_MTP, engine_flags(pack_path(data_dir)))
     return Decision(asked, "off", NONE_HERE)
 
@@ -1105,7 +1107,7 @@ def apply(cfg: dict[str, Any], *, klass: str = "other", data_dir: str | Path | N
         mode = "off"                                          # "Draft layer (MTP)" turned off by the person, and no drafter chosen since: no drafter
     decision = decide(mode, model_name=cfg.get("model_name"), family=family, data_dir=data_dir, backend=backend, archs=archs,
                       mtp_here=mtp_here, blocked=blocked_by(strip_draft_flags(args), split=split, slots=slots, named=normalize(mode) == "dflash2", backend=backend) or form == FORM_NONE, vocab_here=vocab is not None,
-                      args=strip_mtp_flags(strip_draft_flags(args)), vram_mib=vram_mib)
+                      args=strip_mtp_flags(strip_draft_flags(args)), vram_mib=vram_mib, forced_pack=forced_pack)
     mine = cfg.get("user_args") or []
     pack = None
     if decision.drafter == "dflash2":
