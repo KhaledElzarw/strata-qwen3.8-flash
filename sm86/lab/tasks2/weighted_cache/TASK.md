@@ -8,7 +8,7 @@ but DOES remove an older value of the same key. ttl=0 expires immediately;
 expiry is now >= insertion_time + ttl. get(key, default=None) purges expiry and
 makes a hit most recent without extending ttl. contains via `key in cache`
 purges but does not affect recency. `keys()` returns live keys least to most
-recent; `weight` returns live total weight. Read time once per public operation.
+recent; `weight` returns live total weight. Read time once per public operation; the constructor does not read the clock.
 Values are stored by reference; instances are independent. clock is injected.
 
 Add resize(budget): validate positive budget before mutation, purge once at the

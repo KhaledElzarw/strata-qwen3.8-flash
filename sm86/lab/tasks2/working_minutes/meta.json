@@ -1,7 +1,0 @@
-{
-  "id": "working_minutes",
-  "family": "intervals",
-  "level": 3,
-  "kind": "extend",
-  "timeout_s": 9
-}

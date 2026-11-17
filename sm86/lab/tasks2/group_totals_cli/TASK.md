@@ -4,7 +4,7 @@ nonblank lines `NAME<TAB>INTEGER`; name is nonempty and contains no tab, integer
 matches -?[0-9]+ with no spaces. Blank lines ignored; physical line numbers count.
 Aggregate integer totals by exact case-sensitive name. Default sort is total:
 descending total, ties lexical name; name sort is lexical. min-total is an integer
-threshold applied AFTER aggregation. top is positive integer, else usage error
+threshold applied AFTER aggregation; a name is kept when its total is greater than or equal to it. top is positive integer, else usage error
 2; apply it AFTER threshold and sorting. Print `NAME<TAB>TOTAL` with LF per row.
 Bad data prints `error: line N` on stderr and returns 1 with NO stdout, even if
 previous lines were valid. All argument errors exit 2. Empty input succeeds.

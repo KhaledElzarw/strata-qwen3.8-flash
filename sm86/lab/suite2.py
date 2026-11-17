@@ -24,7 +24,7 @@ import time
 from pathlib import Path
 
 LAB = Path(__file__).resolve().parent
-TASKS = LAB / "tasks2"
+ROOTS = [LAB / "tasks2", LAB / "tasks_ex"]      # the home-made tasks and the Exercism ones (exercism_tasks.py)
 RUNS = LAB / "runs" / "suite2"
 MODEL = "qwen3.8-flash-next-iq3_xxs"
 BASE_URL = os.environ.get("SUITE2_BASE_URL", "http://127.0.0.1:19100/v1")
@@ -35,13 +35,20 @@ def task_ids(a):
         return [x for x in Path(a.tasks_file).read_text(encoding="utf-8").split() if x]
     if a.tasks:
         return a.tasks.split(",")
-    return sorted(p.name for p in TASKS.iterdir() if (p / "meta.json").is_file())
+    return sorted(p.name for r in ROOTS if r.is_dir() for p in r.iterdir() if (p / "meta.json").is_file())
+
+
+def task_dir(tid):
+    for r in ROOTS:
+        if (r / tid / "meta.json").is_file():
+            return r / tid
+    raise SystemExit(f"no task {tid}")
 
 
 def fresh_copy(tid, root):
     work = root / f"{tid}-{int(time.time() * 1000)}"
-    shutil.copytree(TASKS / tid / "start", work)
-    shutil.copy2(TASKS / tid / "TASK.md", work / "TASK.md")
+    shutil.copytree(task_dir(tid) / "start", work)
+    shutil.copy2(task_dir(tid) / "TASK.md", work / "TASK.md")
     for args in (["init", "-q"], ["add", "-A"], ["-c", "user.name=suite2", "-c", "user.email=suite2@local", "commit", "-q", "-m", "task start"]):
         subprocess.run(["git", *args], cwd=work, capture_output=True)
     return work
@@ -56,7 +63,7 @@ def grade(tid, work, timeout):
         copy = Path(tmp) / "w"
         shutil.copytree(work, copy, ignore=shutil.ignore_patterns(".git", "__pycache__", ".pytest_cache"))
         shutil.rmtree(copy / "tests", ignore_errors=True)
-        shutil.copytree(TASKS / tid / "hidden", copy / "tests")
+        shutil.copytree(task_dir(tid) / "hidden", copy / "tests")
         try:
             r = subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider"], cwd=copy, capture_output=True, text=True,
                                timeout=timeout, env=env)
@@ -94,11 +101,11 @@ def run(a):
             if (LAB / "runs" / "THERMAL_STOP").exists():
                 print("THERMAL_STOP present: stopping", flush=True)
                 return 2
-            meta = json.loads((TASKS / tid / "meta.json").read_text(encoding="utf-8"))
+            meta = json.loads((task_dir(tid) / "meta.json").read_text(encoding="utf-8"))
             work = fresh_copy(tid, root)
             prompt = work / ".task-prompt.md"
             prompt.write_text(f"You are working in the folder {work}. Everything you need is in it.\n\n"
-                              + (TASKS / tid / "TASK.md").read_text(encoding="utf-8"), encoding="utf-8")
+                              + (task_dir(tid) / "TASK.md").read_text(encoding="utf-8"), encoding="utf-8")
             t0 = time.time()
             try:
                 p = subprocess.run(agent_cmd(a, prompt, work), cwd=work, env=env, capture_output=True, text=True, encoding="utf-8",

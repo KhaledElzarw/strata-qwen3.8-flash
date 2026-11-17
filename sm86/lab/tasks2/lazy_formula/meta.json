@@ -1,7 +1,0 @@
-{
-  "id": "lazy_formula",
-  "family": "expressions",
-  "level": 4,
-  "kind": "extend",
-  "timeout_s": 9
-}

@@ -8,6 +8,6 @@ cycle members and acyclic nodes depending on a cycle. Empty graph gives ([], [])
 A self dependency blocks itself. Distinct insertion orders yield identical
 results. Handle disconnected graphs and at least 500 nodes. Do not raise for
 cycles. Implement `order(graph)` flattening rounds; if any blocked nodes exist,
-raise ValueError whose first argument is tuple(blocked), with no partial order.
+raise ValueError whose only argument is tuple(blocked), with no partial order.
 
 Run `python -m pytest -q` in this folder to check your work, and keep going until every test passes. Do not change anything under `tests/`. Use only the Python standard library.

@@ -2,7 +2,7 @@
 Implement `parse(text)` returning `(main, parameters)` for one header value.
 The main value is the text before the first semicolon, stripped and lowercased;
 it must be nonempty. Parameters are `; name = value`, with optional ASCII spaces
-or tabs around punctuation. Names match `[A-Za-z][A-Za-z0-9_-]*` and are lowercased;
+or tabs around punctuation and after the last value. Names match `[A-Za-z][A-Za-z0-9_-]*` and are lowercased;
 duplicate names are errors. An unquoted value is a nonempty run of characters
 other than semicolon, quote, backslash, space or tab. Quoted values use double
 quotes and can be empty; backslash quotes exactly the next character (including

@@ -1,7 +1,0 @@
-{
-  "id": "room_assignment",
-  "family": "intervals",
-  "level": 2,
-  "kind": "fix",
-  "timeout_s": 9
-}

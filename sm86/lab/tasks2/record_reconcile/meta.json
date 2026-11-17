@@ -1,7 +1,0 @@
-{
-  "id": "record_reconcile",
-  "family": "structured_changes",
-  "level": 3,
-  "kind": "extend",
-  "timeout_s": 9
-}

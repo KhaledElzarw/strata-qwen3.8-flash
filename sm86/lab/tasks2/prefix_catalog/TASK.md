@@ -1,6 +1,6 @@
 # Weighted prefix catalog
 Implement `Catalog`. `put(word, weight)` inserts/replaces a nonempty string with
-nonnegative integer weight; invalid word or weight raises ValueError. `remove(word)`
+nonnegative integer weight (a bool is not a valid weight); invalid word or weight raises ValueError. `remove(word)`
 returns bool. `suggest(prefix='', limit=5)` returns matching words by descending
 weight then lexical word; negative limit raises ValueError. Empty prefix matches
 all; limit 0 returns []. `prefix_weight(prefix)` sums matching weights, counting

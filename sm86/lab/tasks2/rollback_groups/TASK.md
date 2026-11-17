@@ -2,7 +2,7 @@
 Implement `Groups(items)` for distinct hashable items (duplicates raise ValueError).
 `union(a,b)` returns True if groups merged, False if already connected.
 `connected(a,b)` and `size(a)` query; unknown items raise KeyError before mutation.
-`count` counts components. `snapshot()` returns a nonnegative integer history
+`count` is an attribute or property (not a method) holding the number of components. `snapshot()` returns a nonnegative integer history
 position. Each successful union adds ONE position; redundant union adds none.
 `rollback(mark)` undoes successful unions after mark, rejecting noninteger marks
 (including bool), negative marks and marks beyond current position with ValueError
