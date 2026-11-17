@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/KhaledElzarw/Strata/releases/tag/v0.1.58-sm86.1"><img alt="Release v0.1.58-sm86.1" src="sm86/assets/badges/release.svg"></a>
+  <a href="https://github.com/KhaledElzarw/strata-qwen3.8-flash/releases/tag/v0.1.58-sm86.2"><img alt="Release v0.1.58-sm86.2" src="sm86/assets/badges/release.svg"></a>
   <img alt="GPU: RTX 3090, sm_86" src="sm86/assets/badges/gpu.svg">
   <img alt="CUDA 13" src="sm86/assets/badges/cuda.svg">
   <img alt="Output: bit-identical" src="sm86/assets/badges/output.svg">
@@ -135,8 +135,8 @@ working [Strata 0.1.58 install](https://github.com/Niko1221/Strata#install) (its
 the Qwen3.8-Flash-Next GSQ-RCO IQ3_XXS model and Strata's DFlash2 pack. The test machine has a Ryzen 9 9950X and
 128 GB of DDR5-5600; the CPU expert pool wants the memory bandwidth.
 
-**1. Get the engine.** Either download `strata-0.1.58-sm86.1-win64-cuda13-sm86.zip` from the
-[release](https://github.com/KhaledElzarw/Strata/releases/tag/v0.1.58-sm86.1), check it against its `.sha256`, and
+**1. Get the engine.** Either download `strata-0.1.58-sm86.2-win64-cuda13-sm86.zip` from the
+[release](https://github.com/KhaledElzarw/strata-qwen3.8-flash/releases/tag/v0.1.58-sm86.2), check it against its `.sha256`, and
 use its `strata.exe`, or build this checkout (Visual Studio 2022 Build Tools and CUDA 13.0):
 
 ```bat
