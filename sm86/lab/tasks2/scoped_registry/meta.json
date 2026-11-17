@@ -1,0 +1,7 @@
+{
+  "id": "scoped_registry",
+  "family": "refactors",
+  "level": 4,
+  "kind": "extend",
+  "timeout_s": 9
+}

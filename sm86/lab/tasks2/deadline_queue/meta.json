@@ -1,0 +1,7 @@
+{
+  "id": "deadline_queue",
+  "family": "timed_state",
+  "level": 3,
+  "kind": "fix",
+  "timeout_s": 9
+}

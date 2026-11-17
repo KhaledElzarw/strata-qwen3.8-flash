@@ -1,0 +1,7 @@
+{
+  "id": "escaped_frames",
+  "family": "protocols",
+  "level": 2,
+  "kind": "implement",
+  "timeout_s": 9
+}

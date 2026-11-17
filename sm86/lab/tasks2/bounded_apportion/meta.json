@@ -1,0 +1,7 @@
+{
+  "id": "bounded_apportion",
+  "family": "numeric",
+  "level": 2,
+  "kind": "implement",
+  "timeout_s": 9
+}

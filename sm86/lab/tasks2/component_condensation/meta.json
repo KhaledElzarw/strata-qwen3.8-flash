@@ -1,0 +1,7 @@
+{
+  "id": "component_condensation",
+  "family": "graphs",
+  "level": 4,
+  "kind": "extend",
+  "timeout_s": 9
+}

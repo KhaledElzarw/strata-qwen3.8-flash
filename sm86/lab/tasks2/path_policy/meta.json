@@ -1,0 +1,7 @@
+{
+  "id": "path_policy",
+  "family": "refactors",
+  "level": 3,
+  "kind": "fix",
+  "timeout_s": 9
+}

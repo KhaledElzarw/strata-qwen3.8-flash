@@ -1,0 +1,7 @@
+{
+  "id": "ordered_receiver",
+  "family": "protocols",
+  "level": 3,
+  "kind": "extend",
+  "timeout_s": 9
+}

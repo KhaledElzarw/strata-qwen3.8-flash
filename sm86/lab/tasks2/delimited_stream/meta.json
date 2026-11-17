@@ -1,0 +1,7 @@
+{
+  "id": "delimited_stream",
+  "family": "parsers",
+  "level": 3,
+  "kind": "extend",
+  "timeout_s": 9
+}

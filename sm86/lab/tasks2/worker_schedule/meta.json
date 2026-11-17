@@ -1,0 +1,7 @@
+{
+  "id": "worker_schedule",
+  "family": "timed_state",
+  "level": 4,
+  "kind": "implement",
+  "timeout_s": 9
+}
