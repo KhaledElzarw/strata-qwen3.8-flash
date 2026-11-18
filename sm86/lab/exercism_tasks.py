@@ -38,6 +38,8 @@ def main():
     if a.polyglot:
         hard = {p.name for p in (Path(a.polyglot) / "python" / "exercises" / "practice").iterdir() if p.is_dir()}
     if out.exists():
+        if any(out.iterdir()) and not (out / "index.json").is_file():
+            raise SystemExit(f"{out} exists and is not an earlier output of this tool (no index.json): not deleting it")
         shutil.rmtree(out)
     out.mkdir(parents=True)
     index, skipped = [], []

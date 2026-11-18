@@ -3,9 +3,9 @@ cut from this repository's own tracked files (code, lab notes, docs, configs, di
 
     python qqset.py --tokenizer ../../packs/iq3_xxs/tokenizer --out runs/qq/set2.ids.json [--segments 60]
 
-The shipped set (data/quant_quality/v1) has 5 x 1,000 tokens: its paired interval is about +-0.013 in mean
-log-probability, wider than the difference between two neighbouring quant tiers.  60 segments bring it to about
-+-0.004.  The files are picked with a fixed seed, so the set is reproducible from a checkout.
+The shipped set (data/quant_quality/v1) has 5 x 1,000 tokens: its paired interval (ppl.py, block bootstrap) is
+wider than the difference between two neighbouring quant tiers.  Twelve times the positions narrow it about 3.5
+times.  The files are picked with a fixed seed, so the set is reproducible from a checkout.
 """
 import argparse
 import json

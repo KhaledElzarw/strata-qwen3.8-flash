@@ -100,7 +100,13 @@ def main():
     prune = "--prune" in sys.argv[1:]
     root = Path(args[0]).resolve() if args else ROOT
     tasks = sorted(p for p in root.iterdir() if p.is_dir() and not p.name.startswith(("_", ".")))
-    failures, metadata = [], []
+    if prune:
+        # only a generated task folder may be pruned: every entry must look like a task, and this audited set is never pruned
+        if root == ROOT or not tasks or any(not (p / "meta.json").is_file() for p in tasks):
+            print("--prune refused: " + ("this folder is the audited set" if root == ROOT else
+                                         "not every subfolder is a task (meta.json missing)"))
+            return 2
+    failures, metadata, kept_broken = [], [], []
     for task in tasks:
         try:
             meta = inventory(task)
@@ -109,9 +115,14 @@ def main():
         except (ValueError, OSError, subprocess.TimeoutExpired, TypeError) as exc:
             failures.append(task.name)
             print(f"{task.name}: BROKEN: {str(exc).splitlines()[0][:160]}", flush=True)
-            if prune:
+            if prune and isinstance(exc, ValueError):   # unfair by the rules; a timeout or an I/O error is not a verdict
                 shutil.rmtree(task)
+            elif prune:
+                kept_broken.append(task.name)
     if failures and prune:
+        if kept_broken:
+            print(f"NOT PRUNED (timeout or I/O error, run again): " + ", ".join(kept_broken))
+            return 1
         print(f"PRUNED {len(failures)}: " + ", ".join(failures))
         print(f"ALL {len(tasks) - len(failures)} TASKS FAIR")
         return 0

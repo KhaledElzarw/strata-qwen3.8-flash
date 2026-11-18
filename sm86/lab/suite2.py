@@ -54,22 +54,68 @@ def fresh_copy(tid, root):
     return work
 
 
+PYTEST_CONFIGS = ("pytest.ini", "tox.ini", "setup.cfg", "pyproject.toml", "conftest.py")
+
+
 def grade(tid, work, timeout):
-    """tasks2/README.md's scoring contract: a fresh copy of the agent's folder, its tests/ replaced by hidden/, a clean pytest."""
+    """tasks2/README.md's scoring contract: a fresh copy of the agent's folder, its tests/ replaced by hidden/, a clean pytest.
+    Nothing the agent added can steer the run: pytest config files, conftest.py and test files that the task did not ship
+    are removed, pytest gets an empty config of its own and is pointed at tests/ only."""
     import tempfile
+    start = task_dir(tid) / "start"
     env = {k: v for k, v in os.environ.items() if k not in ("PYTHONPATH", "PYTEST_ADDOPTS")}
     env["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
-    with tempfile.TemporaryDirectory(prefix="suite2-") as tmp:
+    with tempfile.TemporaryDirectory(prefix="suite2-", ignore_cleanup_errors=True) as tmp:
         copy = Path(tmp) / "w"
         shutil.copytree(work, copy, ignore=shutil.ignore_patterns(".git", "__pycache__", ".pytest_cache"))
         shutil.rmtree(copy / "tests", ignore_errors=True)
+        for p in list(copy.rglob("*")):
+            rel = p.relative_to(copy)
+            added = not (start / rel).exists()
+            if p.is_file() and added and (p.name in PYTEST_CONFIGS or p.name.startswith("test_") or p.name.endswith("_test.py")):
+                p.unlink()
         shutil.copytree(task_dir(tid) / "hidden", copy / "tests")
+        (copy / "suite2-pytest.ini").write_text("[pytest]\n", encoding="utf-8")
         try:
-            r = subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider"], cwd=copy, capture_output=True, text=True,
-                               timeout=timeout, env=env)
+            r = subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "-c", "suite2-pytest.ini", "tests"],
+                               cwd=copy, capture_output=True, text=True, timeout=timeout, env=env)
             return {"pass": r.returncode == 0, "pytest": (r.stdout.strip().splitlines() or [""])[-1][:200]}
         except subprocess.TimeoutExpired:
             return {"pass": False, "pytest": "pytest timed out"}
+
+
+def engine_up():
+    """The engine answers at BASE_URL: a run with the engine down would record every task as a failure."""
+    import urllib.request
+    try:
+        with urllib.request.urlopen(BASE_URL + "/models", timeout=10) as r:
+            return r.status == 200
+    except OSError:
+        return False
+
+
+def run_agent(cmd, work, env, timeout):
+    """Runs the agent with its output in files, not pipes (a grandchild that keeps a pipe open would hang the wait after
+    a timeout), and stops its whole process tree when the time is up.  Returns (exit code or "timeout", stderr tail)."""
+    out, err = work / ".agent-stdout.txt", work / ".agent-stderr.txt"
+    with open(out, "wb") as fo, open(err, "wb") as fe:
+        p = subprocess.Popen(cmd, cwd=work, env=env, stdout=fo, stderr=fe, stdin=subprocess.DEVNULL)
+        try:
+            rc = p.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            if os.name == "nt":
+                subprocess.run(["taskkill", "/T", "/F", "/PID", str(p.pid)], capture_output=True)
+            else:
+                p.kill()
+            try:
+                p.wait(timeout=30)
+            except subprocess.TimeoutExpired:
+                pass
+            rc = "timeout"
+    tail = err.read_bytes()[-300:].decode("utf-8", "replace") if rc != "timeout" else "agent timed out"
+    for f in (out, err):
+        f.unlink(missing_ok=True)
+    return rc, tail
 
 
 def agent_cmd(a, prompt, work):
@@ -85,8 +131,11 @@ def run(a):
     out = RUNS / f"{a.name}.jsonl"
     done = set()
     if out.is_file():
-        done = {(r["task"], r["rep"]) for r in map(json.loads, out.read_text(encoding="utf-8").splitlines()) if r.get("harness_rc") != "skipped"}
-    root = Path(os.environ.get("SUITE2_WORK", str(LAB / "runs" / "work" / "suite2"))) / a.name
+        done = {(r["task"], r["rep"]) for r in map(json.loads, out.read_text(encoding="utf-8").splitlines())}
+    # The working folders stay OUTSIDE this repository by default: the agent has file and terminal tools, and inside the
+    # lab tree it could reach tasks2/<id>/hidden and solution.
+    import tempfile
+    root = Path(os.environ.get("SUITE2_WORK", str(Path(tempfile.gettempdir()) / "suite2-work"))) / a.name
     root.mkdir(parents=True, exist_ok=True)
     env = dict(os.environ)
     if os.environ.get("HERMES_HOME"):
@@ -112,6 +161,9 @@ def run(a):
             if (LAB / "runs" / "THERMAL_STOP").exists():
                 print("THERMAL_STOP present: stopping", flush=True)
                 return 2
+            if not engine_up():                             # nothing is recorded: the run resumes where it stopped
+                print(f"the engine does not answer at {BASE_URL}: stopping", flush=True)
+                return 4
             meta = json.loads((task_dir(tid) / "meta.json").read_text(encoding="utf-8"))
             work = fresh_copy(tid, root)
             prompt = work / ".task-prompt.md"
@@ -119,13 +171,11 @@ def run(a):
                               + (task_dir(tid) / "TASK.md").read_text(encoding="utf-8"), encoding="utf-8")
             t0 = time.time()
             try:
-                p = subprocess.run(agent_cmd(a, prompt, work), cwd=work, env=env, capture_output=True, text=True, encoding="utf-8",
-                                   errors="replace", timeout=a.timeout)
-                rc, tail = p.returncode, (p.stderr or "")[-300:]
-            except subprocess.TimeoutExpired:
-                rc, tail = "timeout", "agent timed out"
-            except OSError as e:
-                rc, tail = "error", str(e)[:300]
+                rc, tail = run_agent(agent_cmd(a, prompt, work), work, env, a.timeout)
+            except OSError as e:                            # the harness itself could not start: not a task result
+                print(f"the agent harness did not start ({e}): stopping", flush=True)
+                shutil.rmtree(work, ignore_errors=True)
+                return 4
             wall = round(time.time() - t0, 1)
             prompt.unlink(missing_ok=True)
             rec = {"task": tid, "rep": rep, "arm": a.name, "level": meta.get("level"), "family": meta.get("family"), "wall_s": wall,
@@ -173,7 +223,8 @@ def compare(a):
     rng = random.Random(7)
     boots = sorted(sum(rng.choice(d) for _ in ids) / len(ids) for _ in range(10000))
     lo, hi = boots[249], boots[9749]
-    print(f"{len(ids)} tasks; base {ra:.1%} ({min(len(v) for v in A.values())} runs a task), candidate {rb:.1%}; "
+    print(f"{len(ids)} tasks; base {ra:.1%} ({min(len(A[t]) for t in ids)}+ runs a task), candidate {rb:.1%} "
+          f"({min(len(B[t]) for t in ids)}+ runs a task); "
           f"difference {100 * (rb - ra):+.1f} points, 95% interval {100 * lo:+.1f} to {100 * hi:+.1f} (paired by task)")
     return 0
 
@@ -186,7 +237,6 @@ def main():
     r.add_argument("--reps", type=int, default=3)
     r.add_argument("--tasks")
     r.add_argument("--tasks-file")
-    r.add_argument("--agent", default="hermes")
     r.add_argument("--agent-cmd")
     r.add_argument("--timeout", type=int, default=900)
     r.add_argument("--max-turns", type=int, default=80, help="the agent's turn limit (hermes): a low limit is a stricter test, few tries")

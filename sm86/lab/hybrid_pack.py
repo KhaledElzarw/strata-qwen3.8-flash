@@ -47,6 +47,8 @@ def main():
     _, donor = read(a.donor)
     pick = layer_set(a.layers)
     out = Path(a.out)
+    if out.resolve() in (Path(a.base).resolve(), Path(a.donor).resolve()):
+        raise SystemExit("--out must not be the base or the donor pack")
     out.mkdir(parents=True, exist_ok=True)
     for p in Path(a.base).iterdir():
         dst = out / p.name
@@ -62,12 +64,15 @@ def main():
             shutil.copy2(p, dst)
     rows, off, added = [], 0, 0
     for layer in sorted(base):
-        f = list(donor[layer] if layer in pick else base[layer])[:8]
+        if layer in pick:
+            if len(donor[layer]) > 8:
+                raise SystemExit(f"layer {layer}: the donor pack names its own shard(s) for this layer; not supported")
+            f = list(donor[layer]) + [a.donor_shard]
+            added += N_EXPERT * (int(f[4]) - int(base[layer][4]))
+        else:
+            f = list(base[layer])                     # a base row keeps its own shard column, if it has one
         blob = int(f[4])
         f[3] = str(off)
-        if layer in pick:
-            f.append(a.donor_shard)
-            added += N_EXPERT * (blob - int(base[layer][4]))
         rows.append(" ".join(f))
         off += N_EXPERT * blob
     head = re.sub(r"total \d+", f"total {off}", head)

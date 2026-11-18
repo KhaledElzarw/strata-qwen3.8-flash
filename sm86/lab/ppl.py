@@ -7,8 +7,9 @@ Each RUN.tsv row is one text position: pos, target id, logp(target), argmax id, 
 (the engine's STRATA_LOGPOS format; RUN.tsv.seg.json holds the segments' line ranges).  Perplexity = exp(-mean
 logp(target)): how surprised the model is by real text, lower is better.  Accuracy = the share of positions where
 the model's most likely token is the text's token.  Against the first file, every other file gets the paired
-difference in mean log-probability per position with a bootstrap 95% interval (positive = the candidate predicts
-the text better), overall and per segment.
+difference in mean log-probability per position with a 95% interval from a block bootstrap (blocks of 100
+consecutive positions, since neighbouring positions are correlated; positive = the candidate predicts the text
+better), overall and per segment.
 """
 import json
 import math
@@ -32,11 +33,24 @@ def summary(rows):
     return math.exp(-sum(lp) / len(lp)), sum(r[2] for r in rows) / len(rows)
 
 
+BLOCK = 100   # positions per bootstrap block: neighbouring positions of a text are correlated, single ones are not independent
+
+
 def paired(a, b, rng):
+    """Mean paired difference and a 95% interval from a block bootstrap (blocks of BLOCK consecutive positions)."""
     d = [y[1] - x[1] for x, y in zip(a, b)]
     n = len(d)
     mean = sum(d) / n
-    boots = sorted(sum(rng.choice(d) for _ in range(n)) / n for _ in range(2000))
+    blocks = [d[i:i + BLOCK] for i in range(0, n, BLOCK)]
+    boots = []
+    for _ in range(2000):
+        s = c = 0
+        for _ in blocks:
+            blk = rng.choice(blocks)
+            s += sum(blk)
+            c += len(blk)
+        boots.append(s / c)
+    boots.sort()
     return mean, boots[49], boots[1949]
 
 

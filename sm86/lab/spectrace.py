@@ -22,9 +22,11 @@ from pathlib import Path
 def parse(path):
     reqs, cur = [], None
     for line in Path(path).read_text(encoding="utf-8", errors="replace").splitlines():
-        if line.startswith("#"):
+        if line.startswith("# request"):
             cur = []
             reqs.append(cur)
+            continue
+        if line.startswith("#"):
             continue
         if not line.startswith("R "):
             continue
