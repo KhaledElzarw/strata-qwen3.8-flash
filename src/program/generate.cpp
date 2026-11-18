@@ -18024,6 +18024,7 @@ int main(int argc, char** argv) {
             static std::FILE* const df2_trace = [] { const char* tf = std::getenv("STRATA_SPEC_TRACE"); return tf != nullptr && tf[0] != '\0' ? std::fopen(tf, "a") : nullptr; }();
             static const bool trace_nopick = std::getenv("STRATA_SPEC_TRACE_NOPICK") != nullptr;   // the lookup draft is logged but never taken
             std::array<int32_t, 8> tr_d{};
+            std::array<float, 32> tr_aux{};      // STRATA_DF2_AUX=1: the drafter's extra numbers for the traced window
             std::array<int32_t, 16> tr_s{};
             int tr_k = 0, tr_match = 0;
             std::vector<int32_t> sbuf((size_t) S, 0);
@@ -18929,6 +18930,7 @@ int main(int argc, char** argv) {
                 }
                 std::copy(dprob.begin(), dprob.begin() + (std::ptrdiff_t) std::min<size_t>(dprob.size(), 8), dwin_s.begin());
                 if (df2_trace != nullptr) std::copy(drafts.begin(), drafts.begin() + (std::ptrdiff_t) std::min<size_t>(drafts.size(), 8), tr_d.begin());
+                if (df2_trace != nullptr && df2.aux() != nullptr) std::copy(df2.aux(), df2.aux() + 28, tr_aux.begin());
                 // --lookup-chain: what followed an earlier occurrence of the context + the MTP's drafts, after them
                 int chain_n = 0, cm = 0;
                 if (o.lookup_chain > 0 && !first_window && !from_sfx && T < S) {
@@ -19340,6 +19342,10 @@ int main(int argc, char** argv) {
                     for (int i = 0; i < tr_k; ++i) std::fprintf(df2_trace, " %d", (int) tr_s[(size_t) i]);
                     std::fprintf(df2_trace, " |");
                     for (int i = 0; i <= a; ++i) std::fprintf(df2_trace, " %d", (int) outv[(size_t) i]);
+                    if (df2.aux() != nullptr) {
+                        std::fprintf(df2_trace, " |");
+                        for (int i = 0; i < 28; ++i) std::fprintf(df2_trace, " %.4f", (double) tr_aux[(size_t) i]);
+                    }
                     std::fprintf(df2_trace, "\n");
                     tr_k = 0;
                 }

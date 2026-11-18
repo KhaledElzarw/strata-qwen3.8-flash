@@ -268,6 +268,9 @@ bool Dflash2Drafter::alloc(std::string& err) {
     h_out_ = (int32_t*) hd;
     out_tok_ = (int32_t*) dd;            // the select kernel writes the 7 picks here (host-visible) ...
     out_prob_ = (float*) dd + 16;        // ... and their probabilities at +16 ints
+    // STRATA_DF2_AUX=1 (trace only): four more numbers a position at +32 ints (the runner-up's share, the pick's place among the head's 16,
+    // the head's margin, the head's first candidate's share).  Unset: the kernel gets nullptr and writes nothing more.
+    if (const char* v = std::getenv("STRATA_DF2_AUX"); v != nullptr && v[0] == '1') out_aux_ = (float*) dd + 32;
     rt_blk_ = rt_ctx_ + B * 128;
     cudaMemset(rt_ctx_, 0, 2 * B * 128 * 4);
     kernels::df2_rope_inv(theta_, rope_inv_, nullptr);
@@ -536,7 +539,7 @@ bool Dflash2Drafter::record_block(cudaStream_t cs, std::string& err, bool rope) 
         stamp("gemm:candidate_selector.hidden_projection");
         df2_select(hsel_, topval_, toptok_, reinterpret_cast<const uint16_t*>(blob_ + find("candidate_selector.predecessor_codebook").off),
                    reinterpret_cast<const uint16_t*>(blob_ + find("candidate_selector.successor_codebook").off), rank_, ndraft_, d_meta_ + 16, out_tok_,
-                   out_prob_, cs, find("candidate_selector.predecessor_codebook").dtype == "q4_0");
+                   out_prob_, cs, find("candidate_selector.predecessor_codebook").dtype == "q4_0", out_aux_);
     } catch (const std::exception& e) {
         err = e.what();
         return false;
@@ -1074,6 +1077,8 @@ bool Dflash2Drafter::draft_finish(int32_t* drafts, float* probs, std::string& er
         drafts[i] = made ? ((volatile int32_t*) h_out_)[i] : 0;
         if (probs) probs[i] = made ? ((volatile float*) h_out_)[16 + i] : 0.0f;
     }
+    if (out_aux_ != nullptr)
+        for (int i = 0; i < kDrafts * 4; ++i) aux_host_[(size_t) i] = i < ndraft_ * 4 ? ((volatile float*) h_out_)[32 + i] : 0.0f;
     if (timing_) {
         float ms = 0;
         if (cudaEventElapsedTime(&ms, ev_a_, ev_b_) == cudaSuccess) ms_gpu += ms;

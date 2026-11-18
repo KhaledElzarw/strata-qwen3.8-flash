@@ -853,7 +853,8 @@ __device__ __forceinline__ float q4row_at(const uint8_t* row, int i) {
 template <bool Q4>
 __global__ void select_kernel(const float* __restrict__ hp, const float* __restrict__ unary, const int32_t* __restrict__ tok,
                               const uint16_t* __restrict__ pred_cb, const uint16_t* __restrict__ succ_cb, int rank, int rows,
-                              const int32_t* __restrict__ anchor_tok, int32_t* __restrict__ out_tok, float* __restrict__ out_prob) {
+                              const int32_t* __restrict__ anchor_tok, int32_t* __restrict__ out_tok, float* __restrict__ out_prob,
+                              float* __restrict__ out_aux) {
     __shared__ float vp[256];
     __shared__ float sc[kDf2TopK];
     __shared__ int prev;
@@ -893,6 +894,15 @@ __global__ void select_kernel(const float* __restrict__ hp, const float* __restr
             for (int j = 0; j < kDf2TopK; ++j) z += __expf(sc[j] - bv);
             out_tok[i] = tok[i * kDf2TopK + bj];
             out_prob[i] = 1.0f / z;
+            if (out_aux != nullptr) {   // STRATA_DF2_AUX=1 (trace only): four more numbers a position, the picks are untouched
+                float v2 = -3.0e38f;
+                for (int j = 0; j < kDf2TopK; ++j)
+                    if (j != bj && sc[j] > v2) v2 = sc[j];
+                out_aux[i * 4 + 0] = __expf(v2 - bv) / z;                                     // the runner-up's share
+                out_aux[i * 4 + 1] = (float) bj;                                              // the pick's place among the head's 16
+                out_aux[i * 4 + 2] = unary[i * kDf2TopK + 0] - unary[i * kDf2TopK + 1];         // the head's own margin, first to second
+                out_aux[i * 4 + 3] = __expf(sc[0] - bv) / z;                                  // the share of the head's first candidate
+            }
             prev = out_tok[i];
         }
         __syncthreads();
@@ -1156,10 +1166,10 @@ void df2_topk(const float* logits, int n, const int32_t* idx_map, int rows, uint
 }
 
 void df2_select(const float* hp, const float* unary, const int32_t* tok, const uint16_t* pred_cb, const uint16_t* succ_cb, int rank, int rows,
-                const int32_t* anchor_tok, int32_t* out_tok, float* out_prob, void* stream, bool cb_q4) {
+                const int32_t* anchor_tok, int32_t* out_tok, float* out_prob, void* stream, bool cb_q4, float* out_aux) {
     if (rank != 256) throw std::invalid_argument("df2_select: the selector rank must be 256");
-    if (cb_q4) select_kernel<true><<<1, 256, 0, (cudaStream_t) stream>>>(hp, unary, tok, pred_cb, succ_cb, rank, rows, anchor_tok, out_tok, out_prob);
-    else select_kernel<false><<<1, 256, 0, (cudaStream_t) stream>>>(hp, unary, tok, pred_cb, succ_cb, rank, rows, anchor_tok, out_tok, out_prob);
+    if (cb_q4) select_kernel<true><<<1, 256, 0, (cudaStream_t) stream>>>(hp, unary, tok, pred_cb, succ_cb, rank, rows, anchor_tok, out_tok, out_prob, out_aux);
+    else select_kernel<false><<<1, 256, 0, (cudaStream_t) stream>>>(hp, unary, tok, pred_cb, succ_cb, rank, rows, anchor_tok, out_tok, out_prob, out_aux);
     check("select");
 }
 

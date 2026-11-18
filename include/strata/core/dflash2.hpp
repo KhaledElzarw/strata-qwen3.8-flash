@@ -15,6 +15,7 @@
 // it, so a rejected draft leaves nothing to roll back.  One CUDA graph per context-row count n = 1..8 holds the context update and the
 // block; the host stages the positions and the anchor and waits for the 7 drafts.
 #pragma once
+#include <array>
 #include <cstdlib>
 
 #include "strata/core/session.hpp"
@@ -141,6 +142,8 @@ public:
     /// own stream) can launch first and finish after, so their graphs run at the same time.
     bool draft_launch(const float* taps_dev, int n_new, int64_t pos0, int32_t anchor, std::string& err);
     bool draft_finish(int32_t* drafts, float* probs, std::string& err);
+    /// STRATA_DF2_AUX=1 (trace only): the last finished round's kDrafts x 4 extra selector numbers, else nullptr.
+    const float* aux() const { return out_aux_ != nullptr ? aux_host_.data() : nullptr; }
 
     /// Captures the eight round graphs (n_new = 1..8) on `taps` now, so no round pays for a capture.
     bool prepare(const float* taps_dev, std::string& err);
@@ -231,7 +234,8 @@ private:
     float *fcy_ = nullptr, *hctx_ = nullptr, *kc_ = nullptr, *vc_ = nullptr;
     float *h_ = nullptr, *xn_ = nullptr, *xc_ = nullptr, *dyn_ = nullptr, *q_ = nullptr, *qn_ = nullptr, *k_ = nullptr, *v_ = nullptr, *kblk_ = nullptr;
     float *ao_ = nullptr, *o_ = nullptr, *gate_ = nullptr, *up_ = nullptr, *mlp_ = nullptr, *part_ = nullptr, *fn_ = nullptr;
-    float *logits_ = nullptr, *topval_ = nullptr, *hsel_ = nullptr, *out_prob_ = nullptr;
+    float *logits_ = nullptr, *topval_ = nullptr, *hsel_ = nullptr, *out_prob_ = nullptr, *out_aux_ = nullptr;
+    std::array<float, 32> aux_host_{};   ///< STRATA_DF2_AUX=1: the last finished round's four extra numbers a position
     int32_t *toptok_ = nullptr, *out_tok_ = nullptr;
     uint32_t* topscratch_ = nullptr;
     cudaGraphExec_t exec_[kRows + 1] = {};
