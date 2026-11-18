@@ -57,11 +57,12 @@ def main():
                 text = (REPO / f).read_text(encoding="utf-8")
             except (UnicodeDecodeError, OSError):
                 continue
-            if len(text) < 12000 or sum(1 for c in text[:20000] if ord(c) > 127) > 200:
+            need = a.seg_tokens * 12                                # characters to tokenize: more than enough for the segment
+            if len(text) < need or sum(1 for c in text[:20000] if ord(c) > 127) > 200:
                 continue
-            start = rng.randrange(0, max(1, len(text) - 11000))
+            start = rng.randrange(0, max(1, len(text) - need + 1000))
             start = text.find("\n", start) + 1                     # begin on a line
-            ids = tok.encode(text[start:start + 12000])
+            ids = tok.encode(text[start:start + need])
             if len(ids) < a.seg_tokens:
                 continue
             segs.append({"name": f"{name}{got:02d}", "file": f, "ids": ids[:a.seg_tokens]})

@@ -29,14 +29,15 @@ def parse(path):
         if not line.startswith("R "):
             continue
         parts = [s.split() for s in line[2:].split("|")]
-        if len(parts) != 5 or len(parts[0]) < 5 or len(parts[1]) != 7 or len(parts[2]) != 7:
+        if len(parts) not in (5, 6) or len(parts[0]) < 5 or len(parts[1]) != 7 or len(parts[2]) != 7:
             continue                                  # a line cut short when the engine was stopped
-        head, probs, drafts, look, out = parts
+        head, probs, drafts, look, out = parts[:5]
+        aux = [float(x) for x in parts[5]] if len(parts) == 6 and len(parts[5]) == 28 else None   # STRATA_DF2_AUX=1
         if cur is None:
             cur = []
             reqs.append(cur)
         cur.append(dict(p=int(head[0]), T=int(head[1]), a=int(head[2]), sfx=int(head[3]), ms=float(head[4]),
-                        probs=[float(x) for x in probs], drafts=[int(x) for x in drafts], out=[int(x) for x in out]))
+                        probs=[float(x) for x in probs], drafts=[int(x) for x in drafts], out=[int(x) for x in out], aux=aux))
     return [r for r in reqs if r]
 
 

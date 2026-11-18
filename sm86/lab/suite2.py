@@ -77,7 +77,7 @@ def agent_cmd(a, prompt, work):
         return [x.format(prompt=str(prompt), work=str(work)) for x in shlex.split(a.agent_cmd, posix=False)]
     exe = os.environ.get("HERMES_EXE") or str(Path(os.environ.get("LOCALAPPDATA", "")) / "hermes" / "bin" / "hermes.exe")
     return [exe, "--safe-mode", "chat", "--query-file", str(prompt), "--oneshot", "-Q", "--provider", "custom", "--base-url", BASE_URL,
-            "--api-key", "strata-local", "-m", MODEL, "-t", "file,terminal", "--max-turns", "80", "--source", "tool"]
+            "--api-key", "strata-local", "-m", MODEL, "-t", "file,terminal", "--max-turns", str(a.max_turns), "--source", "tool"]
 
 
 def run(a):
@@ -92,12 +92,23 @@ def run(a):
     if os.environ.get("HERMES_HOME"):
         env["HERMES_HOME"] = os.environ["HERMES_HOME"]
     ids = task_ids(a)
-    for rep in range(a.reps):
+    deadline = None
+    if a.deadline:                                      # HH:MM, its next occurrence: no task starts after it
+        hh, mm = (int(x) for x in a.deadline.split(":"))
+        now = time.localtime()
+        deadline = time.mktime((now.tm_year, now.tm_mon, now.tm_mday, hh, mm, 0, 0, 0, -1))
+        if deadline <= time.time():
+            deadline += 86400
+    reps = range(a.first_rep, a.first_rep + a.reps)
+    for rep in reps:
         order = ids[:]
         random.Random(1000 + rep).shuffle(order)          # the same order for every arm
         for tid in order:
             if (tid, rep) in done:
                 continue
+            if deadline is not None and time.time() >= deadline:
+                print(f"deadline {a.deadline} reached: stopping", flush=True)
+                return 3
             if (LAB / "runs" / "THERMAL_STOP").exists():
                 print("THERMAL_STOP present: stopping", flush=True)
                 return 2
@@ -178,7 +189,10 @@ def main():
     r.add_argument("--agent", default="hermes")
     r.add_argument("--agent-cmd")
     r.add_argument("--timeout", type=int, default=900)
+    r.add_argument("--max-turns", type=int, default=80, help="the agent's turn limit (hermes): a low limit is a stricter test, few tries")
     r.add_argument("--gap", type=float, default=2.0)
+    r.add_argument("--deadline", help="HH:MM (local): start no task after this time")
+    r.add_argument("--first-rep", type=int, default=0, help="number of the first repetition (to add one block at a time)")
     r.add_argument("--keep", action="store_true", help="keep each working folder")
     t = sub.add_parser("table")
     t.add_argument("files", nargs="+")
