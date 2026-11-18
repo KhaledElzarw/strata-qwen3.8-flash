@@ -1,0 +1,7 @@
+{
+  "id": "three_way_tree",
+  "family": "structured_changes",
+  "level": 4,
+  "kind": "implement",
+  "timeout_s": 9
+}

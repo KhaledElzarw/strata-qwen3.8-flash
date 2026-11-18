@@ -1,0 +1,7 @@
+{
+  "id": "weighted_cache",
+  "family": "timed_state",
+  "level": 2,
+  "kind": "implement",
+  "timeout_s": 9
+}

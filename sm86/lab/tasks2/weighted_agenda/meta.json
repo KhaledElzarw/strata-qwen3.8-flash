@@ -1,0 +1,7 @@
+{
+  "id": "weighted_agenda",
+  "family": "intervals",
+  "level": 4,
+  "kind": "implement",
+  "timeout_s": 9
+}

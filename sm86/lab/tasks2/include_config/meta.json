@@ -1,0 +1,7 @@
+{
+  "id": "include_config",
+  "family": "parsers",
+  "level": 4,
+  "kind": "implement",
+  "timeout_s": 9
+}

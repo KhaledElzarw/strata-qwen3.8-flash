@@ -1,0 +1,7 @@
+{
+  "id": "group_totals_cli",
+  "family": "cli",
+  "level": 2,
+  "kind": "fix",
+  "timeout_s": 9
+}

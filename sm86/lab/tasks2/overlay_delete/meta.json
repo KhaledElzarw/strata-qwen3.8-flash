@@ -1,0 +1,7 @@
+{
+  "id": "overlay_delete",
+  "family": "structured_changes",
+  "level": 2,
+  "kind": "fix",
+  "timeout_s": 9
+}

@@ -1,0 +1,7 @@
+{
+  "id": "folded_records",
+  "family": "parsers",
+  "level": 3,
+  "kind": "fix",
+  "timeout_s": 9
+}

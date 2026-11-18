@@ -1,0 +1,7 @@
+{
+  "id": "atomic_pointer_patch",
+  "family": "structured_changes",
+  "level": 2,
+  "kind": "implement",
+  "timeout_s": 9
+}

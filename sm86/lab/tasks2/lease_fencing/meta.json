@@ -1,0 +1,7 @@
+{
+  "id": "lease_fencing",
+  "family": "protocols",
+  "level": 4,
+  "kind": "implement",
+  "timeout_s": 9
+}

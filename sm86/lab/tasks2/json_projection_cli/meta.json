@@ -1,0 +1,7 @@
+{
+  "id": "json_projection_cli",
+  "family": "cli",
+  "level": 2,
+  "kind": "implement",
+  "timeout_s": 9
+}

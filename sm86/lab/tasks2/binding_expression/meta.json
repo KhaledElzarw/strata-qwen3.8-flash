@@ -1,0 +1,7 @@
+{
+  "id": "binding_expression",
+  "family": "expressions",
+  "level": 2,
+  "kind": "implement",
+  "timeout_s": 9
+}

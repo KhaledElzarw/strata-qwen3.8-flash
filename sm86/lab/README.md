@@ -65,3 +65,22 @@ baseline), `ab3` (phase 2), `hc86` (HC read kernels), `dag1` (CPU pool batch and
 **Left out of the published copy:** the raw Nsight traces (about 1.1 GB), the agent harness's own install, logs and
 configs that hold the machine's environment, and the bakeoff that chose the agent harness. The Windows user name in
 paths is replaced with `user`, so a replayed prompt can differ from the measured one by that word.
+
+## The weights campaign (2026-11-17 and 18)
+
+Tools added, each with its usage at the top of the file:
+
+| Tool | What it does |
+| --- | --- |
+| `vocab_corpus.py` | Builds the English and code corpus behind `data/draft_vocab_en_code.bin` (with `tools/draft_vocab.py`). |
+| `spectrace.py` | Per-position draft acceptance, calibration and cut simulations from a `STRATA_SPEC_TRACE` file. |
+| `crossed_check.py` | The crossed token-forcing check for a drafter or window change (base and candidate text, both scorers). |
+| `ppl.py`, `ppl_run.py`, `qqset.py` | Perplexity and next-token accuracy from `tools/quant_quality.py` runs, a run with one pinned setting changed (K/V format), and larger text sets (60 x 1,000 tokens, 4 x 16,000). |
+| `hybrid_pack.py` | A pack whose routed experts come from two quant tiers, layer by layer. |
+| `suite2.py`, `tasks2/`, `exercism_tasks.py` | A task suite any agent harness can run: 34 audited home-made tasks and the Exercism Python track (MIT, converted from a checkout into the git-ignored `tasks_ex/`). |
+
+Experiments: `vocab1` (the new draft vocabulary, adopted: decode 1.052 [1.033-1.071]), `trace1` and `trace2`
+(acceptance traces), `p1b` and `p1c` (settings that did not pay), `tk1` (temperature 0.8 and 0.6, FP16 K/V), and
+the crossed check `runs/fc/v1-*`. The live config is `sm86/configs/strata-iq3_xxs-q6.json`. The task suite is
+saturated with an 80-turn agent (99% solved) and too noisy with a 4-turn limit, so it cannot judge quality
+changes yet.

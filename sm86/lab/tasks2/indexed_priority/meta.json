@@ -1,0 +1,7 @@
+{
+  "id": "indexed_priority",
+  "family": "structures",
+  "level": 3,
+  "kind": "fix",
+  "timeout_s": 9
+}

@@ -1,0 +1,7 @@
+{
+  "id": "inventory_hunt",
+  "family": "bug_hunts",
+  "level": 4,
+  "kind": "fix",
+  "timeout_s": 9
+}

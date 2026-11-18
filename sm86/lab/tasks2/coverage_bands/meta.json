@@ -1,0 +1,7 @@
+{
+  "id": "coverage_bands",
+  "family": "intervals",
+  "level": 2,
+  "kind": "implement",
+  "timeout_s": 9
+}

@@ -1,0 +1,7 @@
+{
+  "id": "decimal_display",
+  "family": "numeric",
+  "level": 2,
+  "kind": "fix",
+  "timeout_s": 9
+}

@@ -1,0 +1,7 @@
+{
+  "id": "line_selection_cli",
+  "family": "cli",
+  "level": 3,
+  "kind": "implement",
+  "timeout_s": 9
+}

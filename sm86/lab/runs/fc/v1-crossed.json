@@ -1,0 +1,20 @@
+{
+ "requests": 65,
+ "rates_pct": {
+  "base scorer / base text": 3.824,
+  "base scorer / candidate text": 3.767,
+  "candidate scorer / base text": 3.684,
+  "candidate scorer / candidate text": 3.932
+ },
+ "text_effect_pts": 0.095,
+ "text_effect_ci90": [
+  -0.182,
+  0.377
+ ],
+ "own_path_effect_pts": -0.153,
+ "own_path_effect_ci90": [
+  -0.271,
+  -0.041
+ ],
+ "rate_rule_text_effect": "PASS"
+}
